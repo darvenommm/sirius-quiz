@@ -1,0 +1,12 @@
+@using Quiz.ViewModels
+
+@model SubmitTestViewModel
+
+@{
+    ViewData["Title"] = "Test Result";
+}
+
+<h1>@ViewData["Title"]</h1>
+<p>You answered @Model.CorrectCount from @Model.AllCount questions correctly krasavchik!</p>
+
+<a href="@Url.Action("Index")" class="btn btn-primary">Back to Test List</a>

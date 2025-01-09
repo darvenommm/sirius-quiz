@@ -1,0 +1,86 @@
+
+@model Quiz.Models.Test
+
+@{
+    ViewData["Title"] = "Create Test";
+}
+
+<h2>Create Test</h2>
+
+@if (ViewBag.Errors != null)
+{
+    var errorList = ViewBag.Errors as List<string>;
+    if (errorList != null)
+    {
+        <div class="alert alert-danger">
+            <ul>
+                @foreach (var error in errorList)
+                {
+                    <li>@error</li>
+                }
+            </ul>
+        </div>
+    }
+}
+
+<div class="container mt-4">
+    <form asp-action="Create" method="post">
+        <div class="form-group">
+            <label asp-for="Title" class="control-label"></label>
+            <input asp-for="Title" class="form-control" />
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mt-3">
+            <label asp-for="Description" class="control-label"></label>
+            <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mt-3">
+            <label>Questions</label>
+            <button type="button" class="btn btn-secondary btn-sm" id="add-question">Add Question</button>
+
+            <div id="questions-container" class="mt-3">
+                <!-- Placeholder for dynamic question inputs -->
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary mt-4">Create</button>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        document.getElementById('add-question').addEventListener('click', function () {
+            const container = document.getElementById('questions-container');
+            const index = container.children.length;
+
+            const questionHtml = `
+                <div class="form-group mt-3">
+                    <label>
+                        Question Title <br>
+                        <input name="Questions[${index}].Title" class="form-control" />
+                    </label>
+
+                    <label class="mt-2">
+                        Answer <br>
+                        <input name="Questions[${index}].Answer" class="form-control" />
+                    </label>
+
+                    <button type="button" class="btn btn-danger btn-sm mt-2 remove-question">Remove</button>
+                </div>`;
+
+            const div = document.createElement('div');
+            div.innerHTML = questionHtml;
+
+            container.appendChild(div);
+
+            div.querySelector('.remove-question').addEventListener('click', function () {
+                container.removeChild(div);
+            });
+        });
+    </script>
+}

@@ -1,0 +1,22 @@
+@model Quiz.Models.Test
+
+@{
+    ViewData["Title"] = "Start Test";
+}
+
+<h1>@ViewData["Title"] - @Model.Title</h1>
+<p>@Model.Description</p>
+
+<form asp-action="SubmitTest" method="post" autocomplete="off">
+    <input type="hidden" name="testId" value="@Model.Id" />
+
+    @foreach (var (question, index) in Model.Questions.Select((q, i) => (q, i)))
+    {
+        <div class="question">
+            <h3>@question.Title</h3>
+            <input type="text" name="selectedAnswers[@index]" required>
+        </div>
+    }
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>

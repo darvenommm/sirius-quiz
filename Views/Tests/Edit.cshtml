@@ -1,0 +1,21 @@
+@model Quiz.Models.Test
+
+@{
+    ViewData["Title"] = "Edit Test";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<form asp-action="Edit" method="post">
+    <div class="form-group">
+        <label for="Title">Title</label>
+        <input type="text" id="Title" name="Title" class="form-control" value="@Model.Title" required />
+    </div>
+
+    <div class="form-group">
+        <label for="Description">Description</label>
+        <textarea id="Description" name="Description" class="form-control" required>@Model.Description</textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Update Test</button>
+</form>
