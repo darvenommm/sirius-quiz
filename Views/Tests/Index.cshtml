@@ -1,7 +1,7 @@
 @model IEnumerable<Quiz.Models.Test>
 
 @{
-    ViewData["Title"] = "Test List";
+    ViewData["Title"] = "Tests List";
 }
 
 <h1>@ViewData["Title"]</h1>
@@ -23,11 +23,11 @@
                 <td>@test.Title</td>
                 <td>@test.Description</td>
                 <td>
-                    <a href="@Url.Action("Start", new { id = test.Id })">Start</a> 
+                    <a href="@Url.Action("Start", new { testId = test.Id })">Start</a> 
                      @if (User.IsInRole("Admin")) {
                         <span>
-                            | <a href="@Url.Action("Edit", new { id = test.Id })">Edit</a> 
-                            | <form method="post" action="@Url.Action("Delete", new { id = test.Id })" style="display:inline;">
+                            | <a href="@Url.Action("Edit", new { testId = test.Id })">Edit</a> 
+                            | <form method="post" action="@Url.Action("Delete", new { testId = test.Id })" style="display:inline;">
                                 <button type="submit" class="btn btn-danger">Delete</button>
                               </form>
                         </span>

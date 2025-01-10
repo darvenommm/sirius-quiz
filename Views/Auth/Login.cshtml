@@ -1,5 +1,11 @@
 @model Quiz.ViewModels.LoginViewModel
 
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div asp-validation-summary="All" class="text-danger"></div>
+
 <h2>Login</h2>
 <form asp-action="Login" method="post">
     <div>

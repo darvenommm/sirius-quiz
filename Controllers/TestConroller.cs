@@ -21,11 +21,29 @@ public class TestsController(ITestService testService) : Controller
     }
 
     [HttpGet]
-    public IActionResult Start(int id)
+    public IActionResult Start(int testId)
     {
-        var test = _testService.GetTest(id);
+        var test = _testService.GetTest(testId);
 
         return View(test);
+    }
+
+    [HttpGet]
+    [Authorize]
+    public IActionResult Results()
+    {
+        var userId = User.Identity?.IsAuthenticated == true
+            ? User.FindFirstValue(ClaimTypes.NameIdentifier)
+            : null;
+
+        if (userId == null)
+        {
+            throw new Exception("User is not authorize");
+        }
+
+        var testsResult = _testService.GetTestResultsForUser(userId);
+
+        return View(testsResult);
     }
 
     [HttpPost]
@@ -34,12 +52,6 @@ public class TestsController(ITestService testService) : Controller
         var userId = User.Identity?.IsAuthenticated == true
             ? User.FindFirstValue(ClaimTypes.NameIdentifier)
             : null;
-
-        Console.WriteLine("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-        foreach (var a in selectedAnswers)
-        {
-            Console.WriteLine(a);
-        }
 
         var test = _testService.GetTest(testId);
         var countCorrectAnswer = _testService.GetCountCorrectAnswers(testId, selectedAnswers);
@@ -86,20 +98,20 @@ public class TestsController(ITestService testService) : Controller
 
     [HttpGet]
     [Authorize(Roles = "Admin")]
-    public IActionResult Edit(int id)
+    public IActionResult Edit(int testId)
     {
-        var test = _testService.GetTest(id);
+        var test = _testService.GetTest(testId);
 
         return View(test);
     }
 
     [HttpPost]
     [Authorize(Roles = "Admin")]
-    public IActionResult Edit(int testId, Test test)
+    public IActionResult Edit(Test test)
     {
         if (ModelState.IsValid)
         {
-            _testService.UpdateTest(testId, test);
+            _testService.UpdateTest(test);
 
             return RedirectToAction("Index");
         }
@@ -109,9 +121,9 @@ public class TestsController(ITestService testService) : Controller
 
     [HttpPost]
     [Authorize(Roles = "Admin")]
-    public IActionResult Delete(int id)
+    public IActionResult Delete(int testId)
     {
-        _testService.DeleteTest(id);
+        _testService.DeleteTest(testId);
 
         return RedirectToAction("Index");
     }

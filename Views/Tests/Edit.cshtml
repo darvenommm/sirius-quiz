@@ -4,18 +4,49 @@
     ViewData["Title"] = "Edit Test";
 }
 
-<h1>@ViewData["Title"]</h1>
+<h2>Edit Test</h2>
 
-<form asp-action="Edit" method="post">
-    <div class="form-group">
-        <label for="Title">Title</label>
-        <input type="text" id="Title" name="Title" class="form-control" value="@Model.Title" required />
-    </div>
+<div asp-validation-summary="All" class="text-danger"></div>
 
-    <div class="form-group">
-        <label for="Description">Description</label>
-        <textarea id="Description" name="Description" class="form-control" required>@Model.Description</textarea>
-    </div>
+<div>
+    <form asp-action="Edit" method="post">
+        <input type="hidden" asp-for="Id" />
+        
+        <div class="form-group">
+            <label asp-for="Title" class="control-label"></label>
+            <input asp-for="Title" class="form-control" />
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
+        
+        <div class="form-group">
+            <label asp-for="Description" class="control-label"></label>
+            <textarea asp-for="Description" class="form-control"></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
 
-    <button type="submit" class="btn btn-primary">Update Test</button>
-</form>
+        <h3>Questions</h3>
+        <div id="questions-container">
+            @for (int i = 0; i < Model.Questions.Count; i++)
+            {
+                <div class="form-group">
+                    <label for="Questions_@(i)__Title">Question Title</label>
+                    <input type="text" name="Questions[@i].Title" id="Questions_@(i)__Title" value="@Model.Questions.ElementAt(i).Title" class="form-control" required />
+                    
+                    <label for="Questions_@(i)__Answer">Answer</label>
+                    <input type="text" name="Questions[@i].Answer" id="Questions_@(i)__Answer" value="@Model.Questions.ElementAt(i).Answer" class="form-control" required />
+                    
+                    <input type="hidden" name="Questions[@i].Id" value="@Model.Questions.ElementAt(i).Id" />
+                    <input type="hidden" name="Questions[@i].TestId" value="@Model.Questions.ElementAt(i).TestId" />
+                </div>
+                <hr>
+            }
+        </div>
+
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

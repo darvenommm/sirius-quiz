@@ -12,7 +12,7 @@ public interface ITestService
     int GetCountCorrectAnswers(int testId, List<string> answers);
     IEnumerable<TestResult> GetTestResultsForUser(string userId);
     void CreateTest(Test test);
-    void UpdateTest(int testId, Test test);
+    void UpdateTest(Test test);
     void DeleteTest(int testId);
     void AddTestResult(int countCorrectAnswers, int testId, string userId);
 }
@@ -54,7 +54,7 @@ public class TestService(AppDbContext context) : ITestService
 
     public IEnumerable<TestResult> GetTestResultsForUser(string userId)
     {
-        return [.. _context.TestResults.Where(tr => tr.UserId == userId)];
+        return [.. _context.TestResults.Include(tr => tr.Test).ThenInclude(t => t.Questions).Where(tr => tr.UserId == userId)];
     }
 
     public void CreateTest(Test test)
@@ -63,9 +63,9 @@ public class TestService(AppDbContext context) : ITestService
         _context.SaveChanges();
     }
 
-    public void UpdateTest(int testId, Test updatedTest)
+    public void UpdateTest(Test updatedTest)
     {
-        var existingTest = _context.Tests.FirstOrDefault(t => t.Id == testId) ?? throw new KeyNotFoundException("Test not found.");
+        var existingTest = _context.Tests.FirstOrDefault(t => t.Id == updatedTest.Id) ?? throw new KeyNotFoundException("Test not found.");
 
         existingTest.Title = updatedTest.Title;
         existingTest.Description = updatedTest.Description;
